@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+
+<configuration>
+    <!-- 读取配置文件 -->
+    <properties resource="db.properties"/>
+
+    <!--typeAliases：mybatis用来定义别名标签，定义单个别名，里面可以定义多个别名
+        type:表示要定义别名的类，全类路径名
+        alias:自定义别名，任意取
+    -->
+    <typeAliases>
+        <!--    <typeAlias type="com.test.bean.User" alias="user"/> -->
+        <!-- 推荐使用package包的形式来配置别名
+            包的形式会扫描主包及子包下的所有文件
+            以对象类名为别名，大小写不限，推荐使用小写
+         -->
+    </typeAliases>
+
+    <!-- mybatis初始化环境的配置，可以配置多个环境 ，在集成spring 不用 -->
+    <environments default="development">
+        <!-- 配置当前自己的运行环境 -->
+        <environment id="development">
+            <!-- 使用jdbc的事务 -->
+            <transactionManager type="JDBC"/>
+            <!-- 使用连接池 连接数据库 -->
+            <dataSource type="POOLED">
+                <property name="driver" value="${jdbc.driver}"/>
+                <property name="url" value="${jdbc.url}"/>
+                <property name="username" value="${jdbc.username}"/>
+                <property name="password" value="${jdbc.password}"/>
+            </dataSource>
+        </environment>
+    </environments>
+
+    <!-- 配置映射器的位置 -->
+    <mappers>
+        <!-- 使用相对路径 多个路径多个配置-->
+        <!-- <mapper resource="mapper/UserMapper.xml"/> -->
+        <!-- 使用绝对路径 多个路径多个配置-->
+        <!-- <mapper url="file:\\\D:\Work\src\mapper\UserMapper.xml"/> -->
+        <!-- 使用接口实现类，多个接口多个配置。
+        注意： 这种方式只针对接口代理开发。
+        并且映射文件必须和动态接口在同一个包内且名字相同->
+        <!- <mapper class="com.test.mapper.UserMapper"/> -->
+        <!-- 使用包的形式进行批量扫描接口，推荐！
+        注意：这种方式只针对接口代理开发
+        -->
+
+
+        <package name="top.andywu.student.dao"/>
+
+    </mappers>
+</configuration>

@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="top.andywu.student.dao.GradeDao">
+
+    <resultMap type="top.andywu.student.entity.Grade" id="GradeMap">
+        <result property="id" column="id" jdbcType="INTEGER"/>
+        <result property="studentId" column="student_id" jdbcType="VARCHAR"/>
+        <result property="cid" column="cid" jdbcType="VARCHAR"/>
+        <result property="score" column="score" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="GradeMap">
+        select
+          id, student_id, cid, score
+        from grade
+        where id = #{id}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAllByLimit" resultMap="GradeMap">
+        select
+          id, student_id, cid, score
+        from grade
+        <where>
+            <if test="id != null">
+                and id = #{id}
+            </if>
+            <if test="studentId != null and studentId != ''">
+                and student_id = #{studentId}
+            </if>
+            <if test="cid != null and cid != ''">
+                and cid = #{cid}
+            </if>
+            <if test="score != null">
+                and score = #{score}
+            </if>
+        </where>
+        limit #{pageable.offset}, #{pageable.pageSize}
+    </select>
+
+    <!--统计总行数-->
+    <select id="count" resultType="java.lang.Long">
+        select count(1)
+        from grade
+        <where>
+            <if test="id != null">
+                and id = #{id}
+            </if>
+            <if test="studentId != null and studentId != ''">
+                and student_id = #{studentId}
+            </if>
+            <if test="cid != null and cid != ''">
+                and cid = #{cid}
+            </if>
+            <if test="score != null">
+                and score = #{score}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="id" useGeneratedKeys="true">
+        insert into grade(student_id, cid, score)
+        values (#{studentId}, #{cid}, #{score})
+    </insert>
+
+    <insert id="insertBatch" keyProperty="id" useGeneratedKeys="true">
+        insert into grade(student_id, cid, score)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+        (#{entity.studentId}, #{entity.cid}, #{entity.score})
+        </foreach>
+    </insert>
+
+    <insert id="insertOrUpdateBatch" keyProperty="id" useGeneratedKeys="true">
+        insert into grade(student_id, cid, score)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.studentId}, #{entity.cid}, #{entity.score})
+        </foreach>
+        on duplicate key update
+        student_id = values(student_id),
+        cid = values(cid),
+        score = values(score)
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update grade
+        <set>
+            <if test="studentId != null and studentId != ''">
+                student_id = #{studentId},
+            </if>
+            <if test="cid != null and cid != ''">
+                cid = #{cid},
+            </if>
+            <if test="score != null">
+                score = #{score},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete from grade where id = #{id}
+    </delete>
+
+</mapper>
+
